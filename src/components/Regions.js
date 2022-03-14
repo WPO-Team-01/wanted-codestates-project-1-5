@@ -1,15 +1,16 @@
 import styled from 'styled-components';
 
 const Container = styled.div`
-  position: absolute;
-  width: 20vw;
-  height: 99vh;
+  width: 420px;
+  height: 110%;
+  margin-right: 5%;
 `;
 
 const Photo = styled.img`
   position: relative;
-  width: 20vw;
-  height: 50vh;
+  width: 100%;
+  min-width: 210px;
+  object-fit: contain;
 `;
 
 const Items = styled.div`
@@ -23,7 +24,7 @@ const Items = styled.div`
 
 const Text = styled.p`
   position: relative;
-  width: 5vw;
+  width: 90px;
   font-weight: bold;
   color: rgb(51, 51, 51);
   font-size: 1.5rem;
@@ -40,7 +41,7 @@ const Box = styled.div`
   padding-left: 5px;
   padding-right: 5px;
   border-radius: 5px;
-  margin-left: 0.5vw;
+  margin-left: 10px;
 `;
 
 const Text2 = styled.p`
