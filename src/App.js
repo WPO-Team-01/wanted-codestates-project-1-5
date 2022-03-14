@@ -1,9 +1,10 @@
-import './App.css';
+import "./App.css";
+import ImageDragPage from "./pages/ImageDragPage";
 
 function App() {
   return (
     <div className="App">
-      Hello!
+      <ImageDragPage />
     </div>
   );
 }
