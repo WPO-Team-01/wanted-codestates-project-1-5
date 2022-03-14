@@ -1,9 +1,12 @@
 import './App.css';
+import Clothes from './components/Clothes';
+import Regions from './components/Regions';
 
 function App() {
   return (
-    <div className="App">
-      Hello!
+    <div className='App'>
+      <Clothes />
+      <Regions />
     </div>
   );
 }
