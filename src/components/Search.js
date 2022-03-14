@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import Loading from "./Loading";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import Loading from './Loading';
 
 const Container = styled.div`
   width: 100%;
@@ -43,10 +43,10 @@ const Button = styled.button`
 `;
 
 const Search = () => {
-  const [text, setText] = useState("");
+  const [text, setText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const onChange = (event) => {
+  const onChange = event => {
     setText(event.target.value);
   };
   const loadingHandler = () => {
@@ -54,11 +54,11 @@ const Search = () => {
   };
 
   const submit = () => {
-    if (text === "") {
-      alert("검색할 키워드를 입력해 주세요.");
+    if (text === '') {
+      alert('검색할 키워드를 입력해 주세요.');
     } else {
       // 검색 버튼을 클릭시 발생할 일들
-      setText("");
+      setText('');
       loadingHandler();
 
       // 삭제 예정
@@ -72,13 +72,13 @@ const Search = () => {
       <Container>
         {isLoading ? <Loading setIsLoading={setIsLoading} /> : null}
         <Input
-          placeholder="IMAGE URL or KEYWORD"
+          placeholder='IMAGE URL or KEYWORD'
           value={text}
           onChange={onChange}
         />
         <Button
           onClick={submit}
-          onKeyDown={(e) => (e.key === "Enter" ? submit() : null)}
+          onKeyDown={e => (e.key === 'Enter' ? submit() : null)}
         >
           검 색
         </Button>

@@ -1,14 +1,13 @@
-import "./App.css";
-import Clothes from "./components/Clothes";
-import Regions from "./components/Regions";
-import Main from "./pages/Main";
+import './App.css';
+import Main from './pages/Main';
+import ProductPage from './pages/ProductPage';
+import KeywordPage from './pages/KeywordPage';
+import Header from './components/Header';
 
 function App() {
   return (
-    <div className="App">
-      <Clothes />
-      <Regions />
-      {/* <Main /> */}
+    <div className='App'>
+      <ProductPage />
     </div>
   );
 }

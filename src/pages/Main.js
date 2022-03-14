@@ -1,6 +1,6 @@
-import React from "react";
-import styled from "styled-components";
-import Search from "../components/Search";
+import React from 'react';
+import styled from 'styled-components';
+import Search from '../components/Search';
 
 const Header = styled.header`
   width: 100%;
@@ -37,6 +37,7 @@ const SubContainer = styled.section`
   justify-content: center;
   align-items: center;
 `;
+
 const main = () => {
   const gotoMain = () => {
     // 로고 클릭시 메인 페이지로 이동
@@ -45,7 +46,7 @@ const main = () => {
   return (
     <>
       <Header>
-        <Logo src="image/logo.png" onClick={gotoMain} />
+        <Logo src='image/logo.png' onClick={gotoMain} />
       </Header>
       <Container>
         <Title>

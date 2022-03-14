@@ -1,38 +1,39 @@
 import styled from 'styled-components';
 
 const Container = styled.div`
-  position: absolute;
-  left: 35vw;
-  width: 12vw;
-  height: 40vh;
+  width: 210px;
+  height: 370px;
   border: 1px solid #ccc;
   box-shadow: 4px 2px 2px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  margin-right: 20px; //왜 %는 안먹져
+  margin-bottom: 20px;
 `;
 
 const Photo = styled.img`
   position: relative;
-  width: 12vw;
+  width: 100%;
   height: 30vh;
 `;
 const Info = styled.div`
   position: relative;
-  width: 12vw;
-  height: 9vh;
+  width: 100%;
+  height: 8vh;
 `;
 const Name = styled.p`
   position: relative;
-  width: 10vw;
+  box-sizing: border-box;
+  width: 100%;
+  padding-left: 5%;
   top: -10%;
-  left: 5%;
   text-align: left;
-  height: 3vh;
 `;
-const Price = styled.p`
+const Price = styled.div`
   position: relative;
-  top: -12%;
-  left: 28%;
-  width: 8vw;
-  height: 3vh;
+  top: -5%;
+  box-sizing: border-box;
+  width: 100%;
+  padding-right: 5%;
   text-align: right;
   color: #ad53e6;
   font-weight: bold;
