@@ -58,10 +58,12 @@ const RightImage = styled.img`
 const Intro = () => {
   const navigate = useNavigate();
   const gotoOne = () => {
-    navigate("/");
+    navigate("/main1");
   };
 
-  const gotoTwo = () => {};
+  const gotoTwo = () => {
+    navigate("/main2");
+  };
 
   return (
     <Container>

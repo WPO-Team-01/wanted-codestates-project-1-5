@@ -41,7 +41,7 @@ const Header = () => {
   return (
     <Container>
       <ImgContainer>
-        <Link to="/">
+        <Link to="/main1">
           <Logo src="image/logo.png"></Logo>
         </Link>
       </ImgContainer>

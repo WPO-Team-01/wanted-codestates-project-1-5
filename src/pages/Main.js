@@ -49,7 +49,7 @@ const SubContainer = styled.section`
 const Main = () => {
   const navigate = useNavigate();
   const gotoMain = () => {
-    navigate("/");
+    navigate("/main1");
   };
 
   return (
