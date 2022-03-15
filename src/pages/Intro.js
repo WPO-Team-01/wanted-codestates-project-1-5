@@ -1,32 +1,78 @@
 import React from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.section`
   width: 100%;
-  height: 100vh;
+  height: 100%;
   display: flex;
-  border: 1px solid black;
 `;
-const SubContainer = styled.div`
+const LeftContainer = styled.div`
+  position: absolute;
   width: 50%;
   height: 100%;
-  border: 1px solid red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
-const Image = styled.img`
-  width: 100%;
+const RightContainer = styled.div`
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Text = styled.div`
+  position: absolute;
+  color: white;
+  font-size: 36px;
+  z-index: 2;
+`;
+const LeftImage = styled.img`
+  position: absolute;
+  width: 50%;
   height: 100%;
   object-fit: cover;
+  opacity: 0.5;
+  z-index: 1;
+  :hover {
+    opacity: 1;
+  }
+`;
+const RightImage = styled.img`
+  position: absolute;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.5;
+  z-index: 1;
+  :hover {
+    opacity: 1;
+  }
 `;
 
 const Intro = () => {
+  const navigate = useNavigate();
+  const gotoOne = () => {
+    navigate("/");
+  };
+
+  const gotoTwo = () => {};
+
   return (
     <Container>
-      <SubContainer>
-        <Image />
-      </SubContainer>
-      <SubContainer>
-        <Image src="image/과제2.jpeg" />
-      </SubContainer>
+      <LeftImage src="image/fashion.jpg" onClick={gotoOne} />
+      <RightImage src="image/과제2.jpeg" onClick={gotoTwo} />
+      <LeftContainer>
+        <Text>1번 과제</Text>
+      </LeftContainer>
+      <RightContainer>
+        <Text>2번 과제</Text>
+      </RightContainer>
     </Container>
   );
 };
