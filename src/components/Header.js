@@ -1,6 +1,7 @@
-import React from 'react';
-import styled from 'styled-components';
-import Search from './Search';
+import React from "react";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+import Search from "./Search";
 
 const Container = styled.div`
   display: flex;
@@ -21,7 +22,9 @@ const SearchWrapper = styled.div`
 const Header = () => {
   return (
     <Container>
-      <Logo src='image/logo.png'></Logo>
+      <Link to="/">
+        <Logo src="image/logo.png"></Logo>
+      </Link>
       <SearchWrapper>
         <Search />
       </SearchWrapper>

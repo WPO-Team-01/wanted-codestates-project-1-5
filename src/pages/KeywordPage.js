@@ -1,6 +1,9 @@
-import Header from '../components/Header';
-import Clothes from '../components/Clothes';
-import styled from 'styled-components';
+import Header from "../components/Header";
+import Clothes from "../components/Clothes";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import queryString from "query-string";
+import styled from "styled-components";
 
 const Container = styled.div`
   width: 100%;
@@ -17,26 +20,31 @@ const ClothesBox = styled.div`
 `;
 
 function KeywordPage() {
+  const [category, setCategory] = useState();
+  const { search } = useLocation();
+  const { keyword } = queryString.parse(search);
+
+  const product = JSON.parse(localStorage.getItem("products"));
+
+  useEffect(() => {
+    if (product) {
+      setCategory(
+        product.state.data.filter((item) => item.name.includes(keyword)),
+      );
+    }
+  }, [keyword]);
+
   return (
     <Container>
       <Header />
       <ClothesBox>
-        <Clothes />
-        <Clothes />
-        <Clothes />
-        <Clothes />
-        <Clothes />
-        <Clothes />
-        <Clothes />
-        <Clothes />
-        <Clothes />
-        <Clothes />
-        <Clothes />
-        <Clothes />
-        <Clothes />
-        <Clothes />
-        <Clothes />
-        <Clothes />
+        {category?.length > 0 ? (
+          category.map((item) => {
+            return <Clothes data={item} key={item.product_code} />;
+          })
+        ) : (
+          <div>검색 결과가 없습니다.</div>
+        )}
       </ClothesBox>
     </Container>
   );

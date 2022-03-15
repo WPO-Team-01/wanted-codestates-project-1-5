@@ -1,4 +1,5 @@
-import styled from 'styled-components';
+import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const Container = styled.div`
   width: 210px;
@@ -39,22 +40,16 @@ const Price = styled.div`
   font-weight: bold;
 `;
 
-function Clothes() {
-  let data = {
-    product_code: 1,
-    name: '조끼_070',
-    image_url: 'https://static.pxl.ai/problem/images/VT-070.jpg',
-    price: 45065,
-    category_names: ['c1.tops', 'c2.outwears', 'c3.vests'],
-  };
-
+function Clothes({ data }) {
   return (
     <div>
       <Container>
-        <Photo src={data.image_url}></Photo>
+        <a href={data.image_url}>
+          <Photo src={data.image_url}></Photo>
+        </a>
         <Info>
           <Name>{data.name}</Name>
-          <Price>{'￦' + data.price}</Price>
+          <Price>{"￦" + data.price}</Price>
         </Info>
       </Container>
     </div>

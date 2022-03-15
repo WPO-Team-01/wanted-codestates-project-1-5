@@ -1,7 +1,7 @@
 import { fetchData } from "../../api/service";
 
 export const initialState = {
-  isLoading: true,
+  isLoading: false,
   data: null,
   isError: false,
 };
