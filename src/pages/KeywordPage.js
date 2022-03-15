@@ -20,7 +20,7 @@ function KeywordPage() {
   const { search } = useLocation();
   const { keyword } = queryString.parse(search);
   const [currentPage, setCurrentPage] = useState(1);
-  const postPerPage = 35; //페이지당 포스트 개수
+  const postPerPage = 21; //페이지당 포스트 개수
   //현재 페이지 가져오기
   const indexOfLastPage = currentPage * postPerPage; // 1 * 35 = 35번 포스트
   const indexOfFirstPage = indexOfLastPage - postPerPage; // 35 - 35 = 0번 포스트
@@ -42,25 +42,17 @@ function KeywordPage() {
     if (category?.length > 0) {
       setCurrentPosts(category.slice(indexOfFirstPage, indexOfLastPage));
     }
-  }, [category]);
-
+  }, [category, currentPage]);
+  console.log(category);
   return (
     <Container>
       <Header />
-      {/* <ClothesBox posts={currentPosts} /> */}
-      <Container>
-        {currentPosts?.length > 0 ? (
-          currentPosts.map(item => {
-            return <Clothes data={item} key={item.product_code} />;
-          })
-        ) : (
-          <div>검색 결과가 없습니다.</div>
-        )}
-      </Container>
+      <ClothesBox posts={currentPosts} />
       <Pagination
         postPerPage={postPerPage}
-        totalPosts={123}
+        totalPosts={100}
         paginate={paginate}
+        currentPage={currentPage}
       />
     </Container>
   );
