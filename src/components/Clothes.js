@@ -9,12 +9,29 @@ const Container = styled.div`
   background-color: #fff;
   margin-right: 20px; //왜 %는 안먹져
   margin-bottom: 20px;
+  overflow: hidden;
+
+  @media (max-width: 767.98px) {
+    margin: 10px;
+    width: 135px;
+    height: 237px;
+  }
+`;
+const PhotoContainer = styled.div`
+  width: 100%;
+  height: 75%;
+  cursor: pointer;
+  overflow: hidden;
 `;
 
 const Photo = styled.img`
-  position: relative;
   width: 100%;
-  height: 30vh;
+  height: 100%;
+
+  :hover {
+    transform: scale(1.05);
+    transition: 0.3s;
+  }
 `;
 const Info = styled.div`
   position: relative;
@@ -28,6 +45,10 @@ const Name = styled.p`
   padding-left: 5%;
   top: -10%;
   text-align: left;
+  font-weight: bold;
+  @media (max-width: 767.98px) {
+    font-size: 14px;
+  }
 `;
 const Price = styled.div`
   position: relative;
@@ -36,8 +57,12 @@ const Price = styled.div`
   width: 100%;
   padding-right: 5%;
   text-align: right;
-  color: #ad53e6;
+  color: #9f6dfa;
   font-weight: bold;
+  @media (max-width: 767.98px) {
+    font-size: 14px;
+    top: -20%;
+  }
 `;
 
 function Clothes({ data }) {

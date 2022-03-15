@@ -16,14 +16,25 @@ const Container = styled.div`
 
 const Body = styled.div`
   display: flex;
-  width: 80%;
-  justify-content: center;
+  width: 70%;
+  justify-content: space-between;
+  @media (max-width: 500px) {
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+  @media (min-width: 500px) and (max-width: 767.98px) {
+  }
 `;
 
 const ClothesBox = styled.div`
   display: flex;
   flex-wrap: wrap;
-  width: 51%;
+  justify-content: flex-end;
+  @media (max-width: 500px) {
+    justify-content: center;
+  }
 `;
 
 function ProductPage() {
@@ -38,23 +49,23 @@ function ProductPage() {
   useEffect(() => {
     if (!isNaN(keyword)) {
       const findData = regions.state.data.find(
-        (item) => item.product_code === Number(keyword),
+        (item) => item.product_code === Number(keyword)
       );
       setTarget(findData);
       setCategory(
         product.state.data.filter((items) =>
-          findData?.category_names.includes(items.category_names[0]),
-        ),
+          findData?.category_names.includes(items.category_names[0])
+        )
       );
     } else {
       const findData = regions.state.data.find(
-        (item) => item.image_url === keyword,
+        (item) => item.image_url === keyword
       );
       setTarget(findData);
       setCategory(
         product.state.data.filter((items) =>
-          findData?.category_names.includes(items.category_names[0]),
-        ),
+          findData?.category_names.includes(items.category_names[0])
+        )
       );
     }
   }, [keyword]);
