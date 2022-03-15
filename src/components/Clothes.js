@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
 
 const Container = styled.div`
   width: 210px;
@@ -69,9 +68,11 @@ function Clothes({ data }) {
   return (
     <div>
       <Container>
-        <a href={data.image_url}>
-          <Photo src={data.image_url}></Photo>
-        </a>
+        <PhotoContainer>
+          <a href={data.image_url}>
+            <Photo src={data.image_url}></Photo>
+          </a>
+        </PhotoContainer>
         <Info>
           <Name>{data.name}</Name>
           <Price>{"￦" + data.price}</Price>
