@@ -9,6 +9,7 @@ import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../redux/clothes/productsSlice";
 import { fetchRegions } from "../redux/clothes/regionsSlice";
+import Loading from "../components/Loading";
 
 const Container = styled.div`
   width: 100%;
@@ -70,7 +71,7 @@ function ProductPage() {
         const findData = regions.data.find(
           (item) => item.product_code === Number(keyword),
         );
-        console.log(findData);
+
         setTarget(findData);
         setCategory(
           products.data.filter((items) =>
@@ -92,7 +93,7 @@ function ProductPage() {
   }, [keyword, products, regions]);
 
   useEffect(() => {
-    if (category?.length > 0) {
+    if (category) {
       setCurrentPosts(category.slice(indexOfFirstPage, indexOfLastPage));
     }
   }, [category, currentPage]);
@@ -101,7 +102,7 @@ function ProductPage() {
     <Container>
       <Header />
       {products.isLoading || regions.isLoading ? (
-        <div>로딩중입니다.</div>
+        <Loading />
       ) : (
         <>
           <Body>
@@ -109,8 +110,8 @@ function ProductPage() {
               <>
                 <Regions regionData={target} />
                 <ClothesBox>
-                  {category.length > 0 &&
-                    category.map((item) => {
+                  {currentPosts?.length > 0 &&
+                    currentPosts.map((item) => {
                       return <Clothes key={item.product_code} data={item} />;
                     })}
                 </ClothesBox>
@@ -119,12 +120,14 @@ function ProductPage() {
               <div>검색 결과가 없습니다.</div>
             )}
           </Body>
-          <Pagination
-            postPerPage={postPerPage}
-            totalPosts={130}
-            paginate={paginate}
-            currentPage={currentPage}
-          />
+          {currentPosts?.length > 0 && (
+            <Pagination
+              postPerPage={postPerPage}
+              totalPosts={100}
+              paginate={paginate}
+              currentPage={currentPage}
+            />
+          )}
         </>
       )}
     </Container>

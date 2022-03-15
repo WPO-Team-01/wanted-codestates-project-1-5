@@ -7,6 +7,7 @@ import Pagination from "../components/Pagination";
 import ClothesBox from "../components/ClothesBox";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchProducts } from "../redux/clothes/productsSlice";
+import Loading from "../components/Loading";
 
 const Container = styled.div`
   width: 100%;
@@ -43,7 +44,7 @@ function KeywordPage() {
   }, [keyword, products]);
 
   useEffect(() => {
-    if (category?.length > 0) {
+    if (category) {
       setCurrentPosts(category.slice(indexOfFirstPage, indexOfLastPage));
     }
   }, [category, currentPage]);
@@ -51,13 +52,21 @@ function KeywordPage() {
   return (
     <Container>
       <Header />
-      <ClothesBox posts={currentPosts} />
-      <Pagination
-        postPerPage={postPerPage}
-        totalPosts={100}
-        paginate={paginate}
-        currentPage={currentPage}
-      />
+      {products.isLoading ? (
+        <Loading />
+      ) : (
+        <>
+          <ClothesBox posts={currentPosts} />
+          {currentPosts?.length > 0 && (
+            <Pagination
+              postPerPage={postPerPage}
+              totalPosts={100}
+              paginate={paginate}
+              currentPage={currentPage}
+            />
+          )}
+        </>
+      )}
     </Container>
   );
 }
