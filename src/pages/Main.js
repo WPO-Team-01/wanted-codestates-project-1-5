@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Search from "../components/Search";
@@ -14,9 +14,13 @@ const Logo = styled.img`
   height: 50px;
   object-fit: contain;
   cursor: pointer;
+  @media (max-width: 500px) {
+    width: 100px;
+    margin-left: 10px;
+  }
 `;
 const Container = styled.section`
-  height: 400px;
+  height: 500px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -24,18 +28,21 @@ const Container = styled.section`
 `;
 
 const Title = styled.div`
-  font-size: 2.5rem;
+  font-size: 3rem;
   color: #4a4a4b;
   line-height: 1.5;
   margin-bottom: 100px;
+  @media (max-width: 500px) {
+    font-size: 2rem;
+  }
 `;
 const Bold = styled.span`
   font-weight: bolder;
 `;
 const SubContainer = styled.section`
-  width: 80%;
+  width: 50%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 `;
 

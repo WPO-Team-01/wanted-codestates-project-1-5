@@ -14,7 +14,7 @@ const Container = styled.div`
   align-items: center;
 `;
 const Input = styled.input`
-  width: 70%;
+  width: 100%;
   height: 30px;
   padding: 20px;
   box-sizing: border-box;
@@ -48,7 +48,7 @@ const Button = styled.button`
     color: white;
   }
   @media screen and (max-width: 767.98px) {
-    width: 50px;
+    min-width: 50px;
     margin-right: 5px;
   }
 `;
