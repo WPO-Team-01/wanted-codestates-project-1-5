@@ -1,7 +1,11 @@
 import styled from "styled-components";
 import { useEffect, useRef, useState } from "react";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const Container = styled.div`
+  display: flex;
+
   #canvas {
     width: 700px;
     height: 900px;
@@ -10,19 +14,95 @@ const Container = styled.div`
   }
 `;
 
+const MemoArea = styled.div`
+  background-color: #f5f5f5;
+  padding: 10px 20px;
+  margin: 20px;
+  height: fit-content;
+  text-align: left;
+`;
+
+const MemoWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+`;
+const MemoText = styled.p`
+  margin: 10px 20px 10px 0;
+  flex-grow: 1;
+`;
+
+const getNewBox = (startX, startY) => {
+  return {
+    startY,
+    startX,
+    width: 0,
+    height: 0,
+  };
+};
+
 const ImageDragPage = () => {
-  // let question = confirm("영역 이름은 무엇인가요?");
-  // if(question) {
-  //     //영역이름 한쪽에 저장하기
-  //     //영역 표시하기
-  // } else {
-  //     //아무것도 저장되지 않음
-  // }
-  let startX, startY, endX, endY, stX, stY;
   const canvasRef = useRef(null);
-  const [draw, setDraw] = useState(false);
   const [ctx, setCtx] = useState(null);
-  const [boxes, setBoxes] = useState([]);
+  const [itemBoxes, setItemBoxes] = useState([]);
+  const [isClicked, setIsClicked] = useState(false);
+  const [isEntered, setIsEntered] = useState(false);
+
+  const setItem = (itemBox) => {
+    window.localStorage.setItem("itemBox", JSON.stringify(itemBox));
+  };
+  const getItem = () => {
+    return JSON.parse(window.localStorage.getItem("itemBox"));
+  };
+
+  useEffect(() => {
+    const newItemBoxes = getItem();
+    if (newItemBoxes) {
+      setItemBoxes(newItemBoxes);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!ctx) return;
+    ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    itemBoxes.forEach((box) => {
+      ctx.strokeStyle = "#1ed5e2";
+      ctx.fillStyle = "rgba(148,245,96,0.3)";
+      if (!box.name) {
+        ctx.strokeStyle = "#ef2e77";
+        ctx.fillStyle = "rgba(239,45,116,0.3)";
+      }
+      ctx.fillRect(box.startX, box.startY, box.width, box.height);
+      ctx.strokeRect(box.startX, box.startY, box.width, box.height);
+
+      if (box.name) {
+        ctx.fillStyle = "#000";
+        ctx.font = "bold 16px Roboto";
+        if (box.width < 0) {
+          if (box.height < 0) {
+            ctx.fillText(
+              box.name,
+              box.startX + 5 + box.width,
+              box.startY + 20 + box.height
+            );
+          } else {
+            ctx.fillText(box.name, box.startX + 5 + box.width, box.startY + 20);
+          }
+        } else if (box.width > 0) {
+          if (box.height < 0) {
+            ctx.fillText(
+              box.name,
+              box.startX + 5,
+              box.startY + 20 + box.height
+            );
+          } else {
+            ctx.fillText(box.name, box.startX + 5, box.startY + 20);
+          }
+        }
+      }
+    });
+  }, [itemBoxes, ctx]);
 
   useEffect(() => {
     if (!canvasRef.current) {
@@ -30,91 +110,114 @@ const ImageDragPage = () => {
     }
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = "#ff0000";
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "#f22672";
+    ctx.fillStyle = "#F2267230";
     setCtx(ctx);
-  }, [canvasRef.current]);
+  }, []);
 
   const onMouseDown = (event) => {
-    mDown(event);
+    const startX = event.nativeEvent.offsetX;
+    const startY = event.nativeEvent.offsetY;
+    const newBox = getNewBox(startX, startY);
+    setItemBoxes([...itemBoxes, newBox]);
+    setIsClicked(true);
   };
 
+  // const activeArea = (id) => {
+  //   console.log(id, itemBoxes);
+  //   itemBoxes.map((box, index) => {
+  //     if (index === id) {
+  //       ctx.strokeStyle = "#ef2e77";
+  //       ctx.fillStyle = "rgba(239,45,116,0.3)";
+  //       ctx.fillRect(box.startX, box.startY, box.width, box.height);
+  //     }
+  //     return box;
+  //   });
+  // };
+
   const onMouseMove = (event) => {
-    mMove(event);
+    if (!isClicked) {
+      return;
+    }
+
+    const currentX = event.nativeEvent.offsetX;
+    const currentY = event.nativeEvent.offsetY;
+
+    const cloneBoxes = [...itemBoxes];
+    const currentBox = cloneBoxes[cloneBoxes.length - 1];
+
+    const width = currentX - currentBox.startX;
+    const height = currentY - currentBox.startY;
+
+    currentBox.width = width;
+    currentBox.height = height;
+
+    setItemBoxes([...cloneBoxes]);
   };
 
   const onMouseUp = (event) => {
-    mUp(event);
-  };
+    let endX = event.nativeEvent.offsetX;
+    let endY = event.nativeEvent.offsetY;
 
-  const onMouseOut = (event) => {
-    mOut(event);
-  };
+    const cloneBoxes = [...itemBoxes];
+    const currentBox = cloneBoxes[cloneBoxes.length - 1];
 
-  function mMove(event) {
-    if (!draw) {
+    if (currentBox.startX === endX || currentBox.startY === endY) {
+      cancelDraw();
       return;
     }
-    //마우스를 움직일 때마다 X좌표를 nowX에 담음
-    var nowX = event.nativeEvent.offsetX;
-    //마우스를 움직일 때마다 Y좌표를 nowY에 담음
-    var nowY = event.nativeEvent.offsetY;
-    //실질적으로 캔버스에 그림을 그리는 부분
-    canvasDraw(nowX, nowY);
-    //마우스가 움직일때마다 X좌표를 stX에 담음
-    stX = nowX;
-    //마우스가 움직일때마다 Y좌표를 stY에 담음
-    stY = nowY;
-    //console.log(nowX, nowY);
+    const name = prompt("영역의 이름은 무엇인가요?");
+    if (!name) {
+      cancelDraw();
+      return;
+    }
+    currentBox.name = name;
+    setItemBoxes([...cloneBoxes]);
+    setItem([...cloneBoxes]);
+    setIsClicked(false);
+  };
 
-    // const box = {
-    //   startX: nowX,
-    //   startY: nowY,
-    //   width: 0,
-    //   height: 0,
-    // };
-    // setBoxes([...boxes, box]);
-    // console.log(boxes);
-  }
+  const onMouseOut = () => {
+    if (isClicked) {
+      cancelDraw();
+    }
+  };
 
-  //스타트 x,y 담기
-  function mDown(event) {
-    const box = {
-      startX: event.nativeEvent.offsetX,
-      startY: event.nativeEvent.offsetY,
-      width: 0,
-      height: 0,
-    };
-    setDraw(true); //그림 그리기는 그리는 상태로 변경
-    setBoxes([...boxes, box]);
-  }
-  //엔드 x,y 담기
-  function mUp(event) {
-    endX = event.nativeEvent.offsetX;
-    endY = event.nativeEvent.offsetY;
-    // ctx.strokeRect(startX,startY,endX-startX,endY-startY)
-    setDraw(false); //마우스를 떼었을 때 그리기 중지
-    canvasDraw(endX, endY);
-  }
-  function mOut(event) {
-    setDraw(false); //마우스가 캔버스 밖으로 벗어났을 때 그리기 중지
-  }
+  const cancelDraw = () => {
+    const cloneBoxes = [...itemBoxes];
+    cloneBoxes.pop();
+    setItemBoxes([...cloneBoxes]);
+    setIsClicked(false);
+  };
 
-  function canvasDraw(currentX, currentY) {
-    const width = currentX;
-    const height = currentY;
-    const box = {
-      ...boxes,
-      width: currentX - startX,
-      height: currentY - startY,
-    };
-    setBoxes([...boxes, box]);
+  const editItemBoxName = (id) => {
+    console.log(id);
+    const changeName = prompt("변경할 이름을 적어주세요");
+    if (changeName) {
+      const newItems = itemBoxes.map((box, index) => {
+        if (index === id) {
+          const newBox = {
+            ...box,
+            name: changeName,
+          };
+          return newBox;
+        } else {
+          return box;
+        }
+      });
+      setItemBoxes(newItems);
+    }
+  };
 
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); //설정된 영역만큼 캔버스에서 지움
-    ctx.strokeRect(...boxes); //시작점과 끝점의 좌표 정보로 사각형을 그려준다.
-    console.log(startX, startY, currentX, currentY);
-  }
-  console.log(boxes);
+  const deleteItemBox = (id) => {
+    const check = window.confirm("삭제하시겠습니까?");
+    if (check) {
+      const deleteItem = itemBoxes.filter((box, index) => index !== id);
+      setItemBoxes(deleteItem);
+      setItem(deleteItem);
+    }
+  };
 
   return (
     <Container>
@@ -128,6 +231,22 @@ const ImageDragPage = () => {
         onMouseUp={onMouseUp}
         onMouseOut={onMouseOut}
       ></canvas>
+      {itemBoxes && itemBoxes.length > 0 && (
+        <MemoArea>
+          {itemBoxes &&
+            itemBoxes?.map((itemBox, id) => (
+              <div key={id}>
+                {itemBox.name && (
+                  <MemoWrapper>
+                    <MemoText>{itemBox.name}</MemoText>
+                    <EditIcon onClick={() => editItemBoxName(id)} />
+                    <DeleteIcon onClick={() => deleteItemBox(id)} />
+                  </MemoWrapper>
+                )}
+              </div>
+            ))}
+        </MemoArea>
+      )}
     </Container>
   );
 };
