@@ -1,6 +1,7 @@
-import React from 'react';
-import styled from 'styled-components';
-import Search from '../components/Search';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import Search from "../components/Search";
 
 const Header = styled.header`
   width: 100%;
@@ -38,15 +39,16 @@ const SubContainer = styled.section`
   align-items: center;
 `;
 
-const main = () => {
+const Main = () => {
+  const navigate = useNavigate();
   const gotoMain = () => {
-    // 로고 클릭시 메인 페이지로 이동
+    navigate("/");
   };
 
   return (
     <>
       <Header>
-        <Logo src='image/logo.png' onClick={gotoMain} />
+        <Logo src="image/logo.png" onClick={gotoMain} />
       </Header>
       <Container>
         <Title>
@@ -62,4 +64,4 @@ const main = () => {
   );
 };
 
-export default main;
+export default Main;

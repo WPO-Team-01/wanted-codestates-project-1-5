@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import Loading from './Loading';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import Loading from "./Loading";
+import { useSelector, useDispatch } from "react-redux";
+import { getProducts } from "../redux/clothes/productsSlice";
+import { getRegions } from "../redux/clothes/regionsSlice";
 
 const Container = styled.div`
   width: 100%;
@@ -43,45 +47,55 @@ const Button = styled.button`
 `;
 
 const Search = () => {
-  const [text, setText] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [text, setText] = useState("");
+  const [search, setSearch] = useState(false);
 
-  const onChange = event => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const products = useSelector((state) => state.products);
+  const regions = useSelector((state) => state.regions);
+
+  const onChange = (event) => {
     setText(event.target.value);
   };
-  const loadingHandler = () => {
-    setIsLoading(!isLoading);
-  };
+
+  useEffect(() => {
+    !products.data && dispatch(getProducts());
+    !regions.data && dispatch(getRegions());
+  }, [search]);
 
   const submit = () => {
-    if (text === '') {
-      alert('검색할 키워드를 입력해 주세요.');
-    } else {
-      // 검색 버튼을 클릭시 발생할 일들
-      setText('');
-      loadingHandler();
+    setSearch(true);
 
-      // 삭제 예정
-      console.log({ isLoading });
-      // 삭제 예정
+    if (text === "") {
+      alert("검색할 키워드를 입력해 주세요.");
+    } else {
+      if (!isNaN(text) || text.includes("https")) {
+        navigate(`/regions?keyword=${text}`);
+      } else {
+        navigate(`/products?keyword=${text}`);
+      }
+    }
+  };
+
+  const onKeyPress = (e) => {
+    if (e.key === "Enter") {
+      submit();
     }
   };
 
   return (
     <>
       <Container>
-        {isLoading ? <Loading setIsLoading={setIsLoading} /> : null}
+        {products.isLoading || regions.isLoading ? <Loading /> : null}
         <Input
-          placeholder='IMAGE URL or KEYWORD'
+          placeholder="IMAGE URL or KEYWORD"
           value={text}
           onChange={onChange}
+          onKeyPress={onKeyPress}
         />
-        <Button
-          onClick={submit}
-          onKeyDown={e => (e.key === 'Enter' ? submit() : null)}
-        >
-          검 색
-        </Button>
+        <Button onClick={submit}>검 색</Button>
       </Container>
     </>
   );

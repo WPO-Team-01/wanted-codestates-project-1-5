@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const Container = styled.div`
   width: 420px;
@@ -78,49 +78,21 @@ const Key = styled.p`
   color: #0c0c0c;
 `;
 
-function Regions() {
-  let regionData = {
-    product_code: 1,
-    region_id: 2910,
-    image_url: 'https://static.pxl.ai/problem/images/VT-070.jpg',
-    gender: 'gender.unisex',
-    attributes: [
-      {
-        style: 'basic_or_minimal_or_normcore',
-      },
-      {
-        season: 'summer',
-      },
-      {
-        occasion: 'gym_or_outdoor',
-      },
-      {
-        fabric: 'knit_or_angora',
-      },
-      {
-        sense: 'sportive',
-      },
-      {
-        pattern: 'leopard',
-      },
-    ],
-    category_names: ['c1.tops', 'c2.outwears', 'c3.vests'],
-  };
-
+function Regions({ regionData }) {
   return (
     <Container>
       <Photo src={regionData.image_url}></Photo>
       <Items>
         <Text>ITEMS</Text>
-        <Box>{regionData.category_names[0].replace('c1.', '')}</Box>
+        <Box>{regionData.category_names[0].replace("c1.", "")}</Box>
       </Items>
       <Text2>ATTRIBUTES</Text2>
       <Box2>
-        {regionData.attributes.map(el => {
+        {regionData.attributes.map((el) => {
           let key = String(Object.keys(el));
           return (
-            <Tag>
-              <Value>{('#' + el[Object.keys(el)]).toUpperCase()}</Value>
+            <Tag key={key}>
+              <Value>{("#" + el[Object.keys(el)]).toUpperCase()}</Value>
               <Key>{key.toUpperCase()}</Key>
             </Tag>
           );
