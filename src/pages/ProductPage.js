@@ -1,11 +1,15 @@
-import Clothes from '../components/Clothes';
-import Regions from '../components/Regions';
-import Header from '../components/Header';
-import styled from 'styled-components';
-import { useEffect, useState } from 'react';
-import queryString from 'query-string';
-import { useLocation } from 'react-router-dom';
-import Pagination from '../components/Pagination';
+import { useEffect, useState } from "react";
+import queryString from "query-string";
+import { useLocation } from "react-router-dom";
+import Pagination from "../components/Pagination";
+import Clothes from "../components/Clothes";
+import Regions from "../components/Regions";
+import Header from "../components/Header";
+import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProducts } from "../redux/clothes/productsSlice";
+import { fetchRegions } from "../redux/clothes/regionsSlice";
+import Loading from "../components/Loading";
 
 const Container = styled.div`
   width: 100%;
@@ -40,13 +44,10 @@ const ClothesBox = styled.div`
 
 function ProductPage() {
   const [target, setTarget] = useState();
+  const dispatch = useDispatch();
   const [category, setCategory] = useState();
   const { search } = useLocation();
   const { keyword } = queryString.parse(search);
-
-  const regions = JSON.parse(localStorage.getItem('regions'));
-  const product = JSON.parse(localStorage.getItem('products'));
-
   const [currentPage, setCurrentPage] = useState(1);
   const postPerPage = 10; //페이지당 포스트 개수
   //현재 페이지 가져오기
@@ -54,34 +55,45 @@ function ProductPage() {
   const indexOfFirstPage = indexOfLastPage - postPerPage; // 35 - 35 = 0번 포스트
   const [currentPosts, setCurrentPosts] = useState(category); //0~35번까지 포스트
   //클릭 이벤트 페이지 바꾸기
-  const paginate = pageNum => setCurrentPage(pageNum);
+  const paginate = (pageNum) => setCurrentPage(pageNum);
+
+  const products = useSelector((state) => state.products);
+  const regions = useSelector((state) => state.regions);
 
   useEffect(() => {
-    if (!isNaN(keyword)) {
-      const findData = regions.state.data.find(
-        item => item.product_code === Number(keyword),
-      );
-      setTarget(findData);
-      setCategory(
-        product.state.data.filter(items =>
-          findData?.category_names.includes(items.category_names[0]),
-        ),
-      );
-    } else {
-      const findData = regions.state.data.find(
-        item => item.image_url === keyword,
-      );
-      setTarget(findData);
-      setCategory(
-        product.state.data.filter(items =>
-          findData?.category_names.includes(items.category_names[0]),
-        ),
-      );
+    !products.data && dispatch(fetchProducts());
+    !regions.data && dispatch(fetchRegions());
+  }, []);
+
+  useEffect(() => {
+    if (!regions.isLoading && !products.isLoading) {
+      if (!isNaN(keyword)) {
+        const findData = regions.data.find(
+          (item) => item.product_code === Number(keyword),
+        );
+
+        setTarget(findData);
+        setCategory(
+          products.data.filter((items) =>
+            findData?.category_names.includes(items.category_names[0]),
+          ),
+        );
+      } else {
+        const findData = regions.data.find(
+          (item) => item.image_url === keyword,
+        );
+        setTarget(findData);
+        setCategory(
+          products.data.filter((items) =>
+            findData?.category_names.includes(items.category_names[0]),
+          ),
+        );
+      }
     }
-  }, [keyword]);
+  }, [keyword, products, regions]);
 
   useEffect(() => {
-    if (category?.length > 0) {
+    if (category) {
       setCurrentPosts(category.slice(indexOfFirstPage, indexOfLastPage));
     }
   }, [category, currentPage]);
@@ -89,30 +101,35 @@ function ProductPage() {
   return (
     <Container>
       <Header />
-      <Body>
-        {target ? (
-          <>
-            <Regions regionData={target} />
-            <ClothesBox>
-              {currentPosts?.length > 0 ? (
-                currentPosts.map(item => {
-                  return <Clothes key={item.product_code} data={item} />;
-                })
-              ) : (
-                <div>검색 결과가 없습니다.</div>
-              )}
-            </ClothesBox>
-          </>
-        ) : (
-          <div>검색 결과가 없습니다.</div>
-        )}
-      </Body>
-      <Pagination
-        postPerPage={postPerPage}
-        totalPosts={130}
-        paginate={paginate}
-        currentPage={currentPage}
-      />
+      {products.isLoading || regions.isLoading ? (
+        <Loading />
+      ) : (
+        <>
+          <Body>
+            {target ? (
+              <>
+                <Regions regionData={target} />
+                <ClothesBox>
+                  {currentPosts?.length > 0 &&
+                    currentPosts.map((item) => {
+                      return <Clothes key={item.product_code} data={item} />;
+                    })}
+                </ClothesBox>
+              </>
+            ) : (
+              <div>검색 결과가 없습니다.</div>
+            )}
+          </Body>
+          {currentPosts?.length > 0 && (
+            <Pagination
+              postPerPage={postPerPage}
+              totalPosts={100}
+              paginate={paginate}
+              currentPage={currentPage}
+            />
+          )}
+        </>
+      )}
     </Container>
   );
 }
