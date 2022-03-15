@@ -9,7 +9,7 @@ const Container = styled.div`
   #canvas {
     width: 700px;
     height: 900px;
-    background-image: url("/img/fashion-unsplash.jpeg");
+    background-image: url("https://wpo-team-01.github.io/wanted-codestates-project-1-5/img/fashion-unsplash.jpeg");
     background-size: cover;
   }
 `;
