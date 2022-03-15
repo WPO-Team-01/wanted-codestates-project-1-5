@@ -1,20 +1,19 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import Loading from './Loading';
-import { useSelector, useDispatch } from 'react-redux';
-import { getProducts } from '../redux/clothes/productsSlice';
-import { getRegions } from '../redux/clothes/regionsSlice';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
 const Container = styled.div`
   width: 100%;
   height: 50px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
+
+  @media screen and (max-width: 767.98px) {
+  }
 `;
 const Input = styled.input`
-  width: 100%;
+  width: 70%;
   height: 30px;
   padding: 20px;
   box-sizing: border-box;
@@ -25,60 +24,36 @@ const Input = styled.input`
     color: rgba(0, 0, 0, 0.2);
     font-weight: bold;
   }
-  @media (max-width: 498.98px) {
-    min-width: 150px;
-  }
-  @media (min-width: 500px) and (max-width: 767.98px) {
-    min-width: 200px;
+  @media screen and (max-width: 767.98px) {
   }
 `;
 const Button = styled.button`
   width: 70px;
   height: 40px;
+  margin-left: 20px;
   border: none;
   border-radius: 5px;
   font-weight: bold;
-  color: #000;
-  background: #ebebec;
+  color: white;
+  background: #20b2ed;
   cursor: pointer;
-  margin-left: 20px;
-  margin-right: 27px;
   :hover {
-    background: #7c7d80;
-    color: white;
-  }
-  @media screen and (max-width: 767.98px) {
-    min-width: 50px;
-    margin-right: 5px;
+    background: #1d80aa;
   }
 `;
 
 const Search = () => {
-  const [text, setText] = useState('');
-  const [search, setSearch] = useState(false);
-
+  const [text, setText] = useState("");
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const products = useSelector(state => state.products);
-  const regions = useSelector(state => state.regions);
-
-  const onChange = event => {
+  const onChange = (event) => {
     setText(event.target.value);
   };
 
-  useEffect(() => {
-    !products.data && dispatch(getProducts());
-    !regions.data && dispatch(getRegions());
-  }, [search]);
-
   const submit = () => {
-    setSearch(true);
-
-    if (text === '') {
-      alert('검색할 키워드를 입력해 주세요.');
+    if (text === "") {
+      alert("검색할 키워드를 입력해 주세요.");
     } else {
-      if (!isNaN(text) || text.includes('https')) {
+      if (!isNaN(text) || text.includes("https")) {
         navigate(`/regions?keyword=${text}`);
       } else {
         navigate(`/products?keyword=${text}`);
@@ -86,8 +61,8 @@ const Search = () => {
     }
   };
 
-  const onKeyPress = e => {
-    if (e.key === 'Enter') {
+  const onKeyPress = (e) => {
+    if (e.key === "Enter") {
       submit();
     }
   };
@@ -95,9 +70,9 @@ const Search = () => {
   return (
     <>
       <Container>
-        {products.isLoading || regions.isLoading ? <Loading /> : null}
+        {/* {products.isLoading || regions.isLoading ? <Loading /> : null} */}
         <Input
-          placeholder='IMAGE URL or KEYWORD'
+          placeholder="IMAGE URL or KEYWORD"
           value={text}
           onChange={onChange}
           onKeyPress={onKeyPress}
