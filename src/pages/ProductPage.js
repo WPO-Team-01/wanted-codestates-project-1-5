@@ -1,17 +1,18 @@
-import Clothes from "../components/Clothes";
-import Regions from "../components/Regions";
-import Header from "../components/Header";
-import styled from "styled-components";
-import { useEffect, useState } from "react";
-import queryString from "query-string";
-import { useLocation } from "react-router-dom";
+import Clothes from '../components/Clothes';
+import Regions from '../components/Regions';
+import Header from '../components/Header';
+import styled from 'styled-components';
+import { useEffect, useState } from 'react';
+import queryString from 'query-string';
+import { useLocation } from 'react-router-dom';
+import Pagination from '../components/Pagination';
 
 const Container = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
 `;
 
 const Body = styled.div`
@@ -43,32 +44,47 @@ function ProductPage() {
   const { search } = useLocation();
   const { keyword } = queryString.parse(search);
 
-  const regions = JSON.parse(localStorage.getItem("regions"));
-  const product = JSON.parse(localStorage.getItem("products"));
+  const regions = JSON.parse(localStorage.getItem('regions'));
+  const product = JSON.parse(localStorage.getItem('products'));
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const postPerPage = 10; //페이지당 포스트 개수
+  //현재 페이지 가져오기
+  const indexOfLastPage = currentPage * postPerPage; // 1 * 35 = 35번 포스트
+  const indexOfFirstPage = indexOfLastPage - postPerPage; // 35 - 35 = 0번 포스트
+  const [currentPosts, setCurrentPosts] = useState(category); //0~35번까지 포스트
+  //클릭 이벤트 페이지 바꾸기
+  const paginate = pageNum => setCurrentPage(pageNum);
 
   useEffect(() => {
     if (!isNaN(keyword)) {
       const findData = regions.state.data.find(
-        (item) => item.product_code === Number(keyword)
+        item => item.product_code === Number(keyword),
       );
       setTarget(findData);
       setCategory(
-        product.state.data.filter((items) =>
-          findData?.category_names.includes(items.category_names[0])
-        )
+        product.state.data.filter(items =>
+          findData?.category_names.includes(items.category_names[0]),
+        ),
       );
     } else {
       const findData = regions.state.data.find(
-        (item) => item.image_url === keyword
+        item => item.image_url === keyword,
       );
       setTarget(findData);
       setCategory(
-        product.state.data.filter((items) =>
-          findData?.category_names.includes(items.category_names[0])
-        )
+        product.state.data.filter(items =>
+          findData?.category_names.includes(items.category_names[0]),
+        ),
       );
     }
   }, [keyword]);
+
+  useEffect(() => {
+    if (category?.length > 0) {
+      setCurrentPosts(category.slice(indexOfFirstPage, indexOfLastPage));
+    }
+  }, [category, currentPage]);
 
   return (
     <Container>
@@ -78,15 +94,25 @@ function ProductPage() {
           <>
             <Regions regionData={target} />
             <ClothesBox>
-              {category.map((item) => {
-                return <Clothes key={item.product_code} data={item} />;
-              })}
+              {currentPosts?.length > 0 ? (
+                currentPosts.map(item => {
+                  return <Clothes key={item.product_code} data={item} />;
+                })
+              ) : (
+                <div>검색 결과가 없습니다.</div>
+              )}
             </ClothesBox>
           </>
         ) : (
           <div>검색 결과가 없습니다.</div>
         )}
       </Body>
+      <Pagination
+        postPerPage={postPerPage}
+        totalPosts={130}
+        paginate={paginate}
+        currentPage={currentPage}
+      />
     </Container>
   );
 }
