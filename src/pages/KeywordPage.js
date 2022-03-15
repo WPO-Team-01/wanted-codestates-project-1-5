@@ -60,7 +60,7 @@ function KeywordPage() {
           {currentPosts?.length > 0 && (
             <Pagination
               postPerPage={postPerPage}
-              totalPosts={100}
+              totalPosts={category?.length}
               paginate={paginate}
               currentPage={currentPage}
             />

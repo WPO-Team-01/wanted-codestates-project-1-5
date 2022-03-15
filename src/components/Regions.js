@@ -18,9 +18,9 @@ const Container = styled.div`
 
 const Photo = styled.img`
   position: relative;
-  width: 100%;
-  min-width: 210px;
-  object-fit: contain;
+  max-width: 250px;
+  height: 350px;
+  object-fit: cover;
   cursor: pointer;
   @media (max-width: 500px) {
     width: 90%;

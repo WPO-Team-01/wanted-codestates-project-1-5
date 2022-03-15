@@ -69,24 +69,24 @@ function ProductPage() {
     if (!regions.isLoading && !products.isLoading) {
       if (!isNaN(keyword)) {
         const findData = regions.data.find(
-          (item) => item.product_code === Number(keyword),
+          (item) => item.product_code === Number(keyword)
         );
 
         setTarget(findData);
         setCategory(
           products.data.filter((items) =>
-            findData?.category_names.includes(items.category_names[0]),
-          ),
+            findData?.category_names.includes(items.category_names[0])
+          )
         );
       } else {
         const findData = regions.data.find(
-          (item) => item.image_url === keyword,
+          (item) => item.image_url === keyword
         );
         setTarget(findData);
         setCategory(
           products.data.filter((items) =>
-            findData?.category_names.includes(items.category_names[0]),
-          ),
+            findData?.category_names.includes(items.category_names[0])
+          )
         );
       }
     }
@@ -123,7 +123,7 @@ function ProductPage() {
           {currentPosts?.length > 0 && (
             <Pagination
               postPerPage={postPerPage}
-              totalPosts={100}
+              totalPosts={category?.length}
               paginate={paginate}
               currentPage={currentPage}
             />
