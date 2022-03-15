@@ -1,17 +1,17 @@
-import Clothes from "../components/Clothes";
-import Regions from "../components/Regions";
-import Header from "../components/Header";
-import styled from "styled-components";
-import { useEffect, useState } from "react";
-import queryString from "query-string";
-import { useLocation } from "react-router-dom";
+import Clothes from '../components/Clothes';
+import Regions from '../components/Regions';
+import Header from '../components/Header';
+import styled from 'styled-components';
+import { useEffect, useState } from 'react';
+import queryString from 'query-string';
+import { useLocation } from 'react-router-dom';
 
 const Container = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
 `;
 
 const Body = styled.div`
@@ -43,29 +43,29 @@ function ProductPage() {
   const { search } = useLocation();
   const { keyword } = queryString.parse(search);
 
-  const regions = JSON.parse(localStorage.getItem("regions"));
-  const product = JSON.parse(localStorage.getItem("products"));
+  const regions = JSON.parse(localStorage.getItem('regions'));
+  const product = JSON.parse(localStorage.getItem('products'));
 
   useEffect(() => {
     if (!isNaN(keyword)) {
       const findData = regions.state.data.find(
-        (item) => item.product_code === Number(keyword)
+        item => item.product_code === Number(keyword),
       );
       setTarget(findData);
       setCategory(
-        product.state.data.filter((items) =>
-          findData?.category_names.includes(items.category_names[0])
-        )
+        product.state.data.filter(items =>
+          findData?.category_names.includes(items.category_names[0]),
+        ),
       );
     } else {
       const findData = regions.state.data.find(
-        (item) => item.image_url === keyword
+        item => item.image_url === keyword,
       );
       setTarget(findData);
       setCategory(
-        product.state.data.filter((items) =>
-          findData?.category_names.includes(items.category_names[0])
-        )
+        product.state.data.filter(items =>
+          findData?.category_names.includes(items.category_names[0]),
+        ),
       );
     }
   }, [keyword]);
@@ -78,7 +78,7 @@ function ProductPage() {
           <>
             <Regions regionData={target} />
             <ClothesBox>
-              {category.map((item) => {
+              {category.map(item => {
                 return <Clothes key={item.product_code} data={item} />;
               })}
             </ClothesBox>
